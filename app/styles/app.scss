@@ -1,0 +1,12 @@
+$backgroundColor: #8dc5ff;
+
+body {
+    background-color: $backgroundColor;
+}
+
+img {
+    display: block;
+    margin: auto;
+    box-shadow: 10px 10px 20px 0 rgba(0,0,0,0.75);
+    border: 2px solid black;
+}
