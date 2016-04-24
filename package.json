@@ -21,6 +21,9 @@
     "node": ">= 0.6.0",
     "npm": ">= 1.0.0"
   },
+  "scripts": {
+    "postinstall": "gulp build"
+  },
   "dependencies": {
     "express": "~4.13.3"
   },

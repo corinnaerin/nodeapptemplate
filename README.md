@@ -4,6 +4,7 @@ A basic "hello world" application using the following:
 * NodeJS
 * Express
 * jQuery
+* SASS
 * ES6/Babel
 * Gulp
 * Mocha/Chai
@@ -12,7 +13,7 @@ Feel free to clone and use as a starting point for your application! Or, submit 
 
 ## User Guide
 
-To get started, simply run the following to install all the dependencies:
+To get started, simply run the following to install all the dependencies as well as triggering a gulp build:
 
     npm install
 
