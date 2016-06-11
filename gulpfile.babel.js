@@ -60,9 +60,8 @@ gulp.task('sass', ['cleanCSS'], () => {
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
         .pipe(autoprefixer( {
-            browsers: ['last 2 versions'],
-
-        }))
+                browsers: ['last 2 versions']
+            }))
         .pipe(cleanCSS())
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(`${dirs.build}/styles`))
