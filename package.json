@@ -18,7 +18,8 @@
     "url": "git+https://github.com/<your github username>/<your repository name>.git"
   },
   "scripts": {
-    "postinstall": "gulp build"
+    "postinstall": "gulp build",
+    "test": "gulp test"
   },
   "engines": {
     "node": ">= 4.4.4",
@@ -35,7 +36,6 @@
     "browserify": "^13.0.0",
     "chai": "^3.5.0",
     "chai-http": "^1.0.0",
-    "del": "^2.2.0",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-clean": "^0.3.2",

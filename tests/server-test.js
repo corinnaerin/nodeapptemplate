@@ -14,7 +14,7 @@ const genericSuccess = (err, res) => {
 
 describe('Under Construction REST API', () => {
     it('should respond to GET /construction by returning a success message', (done) => {
-        chai.request('localhost:8080')
+        chai.request('localhost:5000')
             .get('/api/construction')
             .end((err, res) => {
                 genericSuccess(err, res);

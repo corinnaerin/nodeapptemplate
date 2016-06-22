@@ -19,9 +19,9 @@ To get started, simply run the following to install all the dependencies as well
 
 To start the node server, simply run:
 
-    node server.js
+    npm start
 
-Then go to `localhost:8080` in your browser to see the results!
+Then go to `localhost:5000` in your browser to see the results!
 
 To run the tests, be sure the server is running then run:
 
