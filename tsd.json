@@ -1,0 +1,39 @@
+{
+  "version": "v4",
+  "repo": "borisyankov/DefinitelyTyped",
+  "ref": "master",
+  "path": "typings",
+  "bundle": "typings/tsd.d.ts",
+  "installed": {
+    "react/react.d.ts": {
+      "commit": "59260ed0583a68551f4f651791a2848c82cf5a13"
+    },
+    "react/react-dom.d.ts": {
+      "commit": "59260ed0583a68551f4f651791a2848c82cf5a13"
+    },
+    "material-ui/material-ui.d.ts": {
+      "commit": "59260ed0583a68551f4f651791a2848c82cf5a13"
+    },
+    "redux/redux.d.ts": {
+      "commit": "59260ed0583a68551f4f651791a2848c82cf5a13"
+    },
+    "react-redux/react-redux.d.ts": {
+      "commit": "59260ed0583a68551f4f651791a2848c82cf5a13"
+    },
+    "node/node.d.ts": {
+      "commit": "a186b551aa4ce681a9a7d7c86c8a23c620c54d8c"
+    },
+    "express/express.d.ts": {
+      "commit": "a186b551aa4ce681a9a7d7c86c8a23c620c54d8c"
+    },
+    "serve-static/serve-static.d.ts": {
+      "commit": "a186b551aa4ce681a9a7d7c86c8a23c620c54d8c"
+    },
+    "express-serve-static-core/express-serve-static-core.d.ts": {
+      "commit": "a186b551aa4ce681a9a7d7c86c8a23c620c54d8c"
+    },
+    "mime/mime.d.ts": {
+      "commit": "a186b551aa4ce681a9a7d7c86c8a23c620c54d8c"
+    }
+  }
+}

@@ -4,7 +4,6 @@ import autoprefixer from 'gulp-autoprefixer'
 import babel from 'babel-core/register'
 import babelify from 'babelify'
 import browserify from 'browserify'
-import buffer from 'vinyl-buffer'
 import clean from 'gulp-clean'
 import cleanCSS from 'gulp-clean-css'
 import gulp from 'gulp'
@@ -15,6 +14,8 @@ import nodemon from 'gulp-nodemon'
 import sass from 'gulp-sass'
 import source from 'vinyl-source-stream'
 import sourcemaps from 'gulp-sourcemaps'
+import tslint from 'gulp-tslint'
+import tsify from 'tsify'
 import uglify from 'gulp-uglify'
 
 const dirs = {
@@ -27,18 +28,27 @@ gulp.task('test', () => {
     return gulp.src(`${dirs.test}/server-test.js`, {read: false})
         .pipe(mocha({
             reporter: 'nyan',
-            complilers: {
+            compilers: {
                 js: babel
             }
-        }))
+        }));
 });
 
 gulp.task('nodemon', ['build'], () => {
     return nodemon({
-        script: 'server.js',
+        script: 'server.ts',
         ext: 'html js scss json gif png',
         ignore: 'dist/*',
-        tasks: ['build'] //This does not work in windows due to a bug in gulp-nodemon, which is why there's a separate watch task below
+        exec: 'ts-node'
+    })
+});
+
+gulp.task('nodemon:release', ['release'], () => {
+    return nodemon({
+        script: 'server.ts',
+        ext: 'html js scss json gif png',
+        ignore: 'dist/*',
+        exec: 'ts-node'
     })
 });
 
@@ -46,7 +56,14 @@ gulp.task('watch', ['build', 'nodemon'], () => {
     gulp.watch(`${dirs.src}/images/**/*`, ['images']);
     gulp.watch(`${dirs.src}/scripts/**/*`, ['scripts']);
     gulp.watch(`${dirs.src}/styles/**/*`, ['sass']);
-    gulp.watch(`${dirs.src}/**/*.html`, ['htmlmin']);
+    gulp.watch(`${dirs.src}/**/*.html`, ['html']);
+});
+
+gulp.task('watch:release', ['release', 'nodemon:release'], () => {
+    gulp.watch(`${dirs.src}/images/**/*`, ['images']);
+    gulp.watch(`${dirs.src}/scripts/**/*`, ['scripts:release']);
+    gulp.watch(`${dirs.src}/styles/**/*`, ['sass:release']);
+    gulp.watch(`${dirs.src}/**/*.html`, ['html:release']);
 });
 
 gulp.task('cleanCSS', () => {
@@ -61,8 +78,17 @@ gulp.task('sass', ['cleanCSS'], () => {
         .pipe(autoprefixer( {
                 browsers: ['last 2 versions']
             }))
-        .pipe(cleanCSS())
         .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest(`${dirs.build}/styles`))
+});
+
+gulp.task('sass:release', ['cleanCSS'], () => {
+    return gulp.src(`${dirs.src}/styles/*.scss`)
+        .pipe(sass().on('error', sass.logError))
+        .pipe(autoprefixer( {
+            browsers: ['last 2 versions']
+        }))
+        .pipe(cleanCSS())
         .pipe(gulp.dest(`${dirs.build}/styles`))
 });
 
@@ -71,9 +97,14 @@ gulp.task('cleanHTML', () => {
         .pipe(clean());
 });
 
-gulp.task('htmlmin', ['cleanHTML'], () => {
+gulp.task('html:release', ['cleanHTML'], () => {
     return gulp.src(`${dirs.src}/**/*.html`)
         .pipe(htmlmin({collapseWhitespace: true}))
+        .pipe(gulp.dest(dirs.build))
+});
+
+gulp.task('html', ['cleanHTML'], () => {
+    return gulp.src(`${dirs.src}/**/*.html`)
         .pipe(gulp.dest(dirs.build))
 });
 
@@ -92,20 +123,31 @@ gulp.task('cleanScripts', () => {
         .pipe(clean());
 });
 
-gulp.task('scripts', ['cleanScripts'], () => {
+gulp.task('ts-lint', () => {
+    gulp.src(`${dirs.src}/scripts/*/**.ts`)
+        .pipe(tslint())
+        .pipe(tslint.report('prose'));
+});
+
+gulp.task('scripts', ['cleanScripts', 'ts-lint'], () => {
     return browserify({
-            entries: `${dirs.src}/scripts/app.js`,
+            entries: `${dirs.src}/scripts/app.tsx`,
             debug: true
         })
-        .transform('babelify', {presets: ['es2015']})
+        .plugin(tsify)
+        .transform(babelify, {presets: ['es2015'], extensions: [ '.tsx', '.ts' ] })
         .bundle()
         .pipe(source('app.js'))
-        .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(uglify())
-        .on('error', gutil.log)
-        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(`${dirs.build}/scripts`));
 });
 
-gulp.task('build', ['sass', 'scripts', 'htmlmin', 'images']);
+gulp.task('scripts:release', ['scripts'], () => {
+    return gulp.src(`${dirs.build}/scripts/app.js`)
+        .pipe(uglify())
+        .on('error', gutil.log)
+        .pipe(gulp.dest(`${dirs.build}/scripts`));
+});
+
+gulp.task('build', ['sass', 'scripts', 'html', 'images']);
+
+gulp.task('release', ['sass:release', 'scripts:release', 'html:release', 'images']);

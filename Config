@@ -1,0 +1,43 @@
+# -*-perl-*-
+
+package.AmazonInternalDashboard = {
+    interfaces = (1.0);
+    deploy = {
+        generic = true;
+    };
+
+    dependencies = {
+        1.0 = {
+        };
+    };
+
+    runtime-dependencies = {
+        1.0 = {
+            NodeJS = 0.12.x;
+        };
+    };
+
+    resolves-conflict-dependencies = {
+        1.0 = {
+            NodeJS = 0.12.x;
+        };
+    };
+
+    build-environment = {
+        chroot = basic;
+        network-access = open;
+    };
+
+    build-system = nodejs-build;
+
+    build-tools = {
+        1.0 = {
+            NodeJSBuild = 1.1;
+            NodeJS = 4.4.4;
+        };
+    };
+
+    targets = {
+        AmazonInternalDashboard-1.0 = { type = default; };
+    };
+};

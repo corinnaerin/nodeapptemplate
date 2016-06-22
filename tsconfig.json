@@ -1,0 +1,13 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "target": "es6",
+        "sourceMap": true,
+        "jsx": "react",
+        "outDir": "./compiled"
+    },
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

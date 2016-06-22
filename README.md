@@ -3,9 +3,9 @@ A basic "hello world" application using the following:
 
 * NodeJS
 * Express
-* jQuery
+* React
 * SASS
-* ES6/Babel
+* Typescript
 * Gulp
 * Mocha/Chai
 
