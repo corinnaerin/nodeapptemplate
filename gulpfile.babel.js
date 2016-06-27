@@ -11,6 +11,7 @@ import gutil from 'gulp-util'
 import htmlmin from 'gulp-htmlmin'
 import mocha from 'gulp-mocha'
 import nodemon from 'gulp-nodemon'
+import path from 'path';
 import sass from 'gulp-sass'
 import source from 'vinyl-source-stream'
 import sourcemaps from 'gulp-sourcemaps'
@@ -22,6 +23,15 @@ const dirs = {
     src: './app',
     build: './dist',
     test: './tests'
+};
+
+const fileExtToTasks = {
+    '.ts': 'scripts',
+    '.tsx': 'scripts',
+    '.html': 'html',
+    '.scss': 'sass',
+    '.gif': 'images',
+    '.png': 'images'
 };
 
 gulp.task('test', () => {
@@ -37,33 +47,35 @@ gulp.task('test', () => {
 gulp.task('nodemon', ['build'], () => {
     return nodemon({
         script: 'server.ts',
-        ext: 'html js scss json gif png',
+        ext: 'html ts tsx scss gif png',
         ignore: 'dist/*',
-        exec: 'ts-node'
+        exec: 'ts-node',
+        tasks: (changedFiles) => {
+            var tasks = new Set();
+            changedFiles.forEach((file) => {
+                const task = fileExtToTasks[path.extname(file)];
+                if (!!task) tasks.add(task);
+            });
+            return Array.from(tasks);
+        }
     })
 });
 
 gulp.task('nodemon:release', ['release'], () => {
     return nodemon({
         script: 'server.ts',
-        ext: 'html js scss json gif png',
+        ext: 'html ts tsx scss gif png',
         ignore: 'dist/*',
-        exec: 'ts-node'
+        exec: 'ts-node',
+        tasks: (changedFiles) => {
+            var tasks = new Set();
+            changedFiles.forEach((file) => {
+                const task = fileExtToTasks[path.extname(file)];
+                if (!!task) tasks.add(`${task}:release`);
+            });
+            return Array.from(tasks);
+        }
     })
-});
-
-gulp.task('watch', ['build', 'nodemon'], () => {
-    gulp.watch(`${dirs.src}/images/**/*`, ['images']);
-    gulp.watch(`${dirs.src}/scripts/**/*`, ['scripts']);
-    gulp.watch(`${dirs.src}/styles/**/*`, ['sass']);
-    gulp.watch(`${dirs.src}/**/*.html`, ['html']);
-});
-
-gulp.task('watch:release', ['release', 'nodemon:release'], () => {
-    gulp.watch(`${dirs.src}/images/**/*`, ['images']);
-    gulp.watch(`${dirs.src}/scripts/**/*`, ['scripts:release']);
-    gulp.watch(`${dirs.src}/styles/**/*`, ['sass:release']);
-    gulp.watch(`${dirs.src}/**/*.html`, ['html:release']);
 });
 
 gulp.task('cleanCSS', () => {
