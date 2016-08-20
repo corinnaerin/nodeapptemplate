@@ -55,7 +55,6 @@ gulp.task('cleanCSS', () => {
 });
 
 gulp.task('sass', ['cleanCSS'], () => {
-
     return gulp.src(`${dirs.src}/styles/*.scss`)
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
@@ -94,8 +93,6 @@ gulp.task('cleanScripts', () => {
 });
 
 gulp.task('scripts', ['cleanScripts'], () => {
-    gulp.src(`${dirs.build}/scripts`, { read: false })
-        .pipe(clean());
     return browserify({
             entries: `${dirs.src}/scripts/app.js`,
             debug: true
